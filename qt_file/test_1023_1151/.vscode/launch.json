@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/현대오토14/Desktop/현대오토SW스쿨/18.프로젝트/001/HAMES_1-5/HAMES_1_5/qt_file/test_1023_1151",
+      "program": "c:/Users/현대오토14/Desktop/현대오토SW스쿨/18.프로젝트/001/HAMES_1-5/HAMES_1_5/qt_file/test_1023_1151/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
