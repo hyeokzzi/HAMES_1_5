@@ -84,9 +84,8 @@ void MPU_Sensor::run()
         cnt_loop++;
         if(cnt_loop%100 != 0)	continue;  //for output speed
 
-        if(cnt_loop){   /* cho em pa sensor conditionwill be put here */ //window is opened
-            delay(500);
-            if(cmAngleX >= 50 || cmAngleX <= -50 || cmAngleY >= 50 || cmAngleY <= -50){
+        if(cmAngleX >= 50 || cmAngleX <= -50 || cmAngleY >= 50 || cmAngleY <= -50){
+            if(cnt_loop){   /* cho em pa sensor conditionwill be put here */ //window is opened
                 serialPutchar(fd1, 'G');    //gyro G
             }
             else    serialPutchar(fd1, 'N');
