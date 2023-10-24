@@ -46,7 +46,7 @@ void MPU_Sensor::run()
         }
         double AcXD = AcX - AcXOff;
         double AcYD = AcY - AcYOff;
-    //    double AcZD = AcZ - AcZOff+16384;
+        double AcZD = AcZ - AcZOff+16384;
         double GyXD = GyX - GyXOff;
         double GyYD = GyY - GyYOff;
         double GyZD = GyZ - GyZOff;
