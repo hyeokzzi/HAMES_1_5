@@ -32,7 +32,7 @@ void UWAVE_Sensor::run()
 
         gUwave = travelTime / 58;
         //
-        emit ThreadEnd(gUwave);
+//        emit ThreadEnd(gUwave);
         sleep(1);
     }
 }

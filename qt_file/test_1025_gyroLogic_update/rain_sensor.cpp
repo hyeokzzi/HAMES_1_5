@@ -30,13 +30,13 @@ void Rain_Sensor::run()
         wiringPiSPIDataRW(SPI_CHANNEL, buff, 3);
 
         buff[1] = 0x0f & buff[1];
-        adcValue = (buff[1] << 8 ) | buff[2];
+//        adcValue = (buff[1] << 8 ) | buff[2];
         gRain = (buff[1] << 8 ) | buff[2];
 
         digitalWrite(CS_MCP3208, 1);
 
         //
-        emit ThreadEnd(gRain);
+//        emit ThreadEnd(gRain);
         sleep(1);
     }
 }

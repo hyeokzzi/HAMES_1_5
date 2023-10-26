@@ -88,8 +88,8 @@ void MPU_Sensor::run()
 		gGyroX = cmAngleX;
 		gGyroY = cmAngleY;
 
-        emit ThreadEnd(cmAngleX);
-        emit ThreadEnd(cmAngleY);
+//        emit ThreadEnd(cmAngleX);
+//        emit ThreadEnd(cmAngleY);
         sleep(1);
     }
 }

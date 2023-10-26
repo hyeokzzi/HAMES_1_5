@@ -15,7 +15,8 @@ void read_data()
 
     while (1)
     {
-        delay(1000);
+        //delay(1000);
+        delay(100);
         State = digitalRead(GPIOIN);
         printf("state = %d\n", State);
         digitalWrite(GPIOOUT, State);
