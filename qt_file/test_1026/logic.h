@@ -13,14 +13,14 @@
 #include <unistd.h>
 #include <math.h>
 #include <deque>
-
+#include <wiringSerial.h>
 using namespace std;
 
 #define MAX_Q_SIZE 35
 #define DIST_STDEV_TH 1
 #define RAIN_TH 2500
 
-#define CLOSE_LENGTH 3
+#define CLOSE_LENGTH 5
 #define OPEN_LENGTH 17
 
 #define CW 0
@@ -55,7 +55,7 @@ private:
     int rainClose();
     int uwaveClose();
     int pirUwaveBuzzer();
-
+    int stick_signal();
     double calcStdev();
 
     uint8_t pre_detected;
@@ -64,7 +64,7 @@ private:
     uint8_t status; // 1: open, 0: close
 
     deque<int> Q;
-
+    int fd;
 signals:
     void ThreadEnd(int);
 };

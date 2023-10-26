@@ -6,49 +6,42 @@ extern int gUwave;
 extern int gRain;
 extern double gGyroX;
 extern double gGyroY;
+extern int gYsig;
 
 Logic::Logic(QObject *parent) : QThread(parent)
 {
     pre_detected = 0;
     tmp_detected = 0;
     pre_dist = 0;
-    status = 0;
+    status = CLOSE;
+    fd = serialOpen("/dev/ttyACM0",9600);
+    serialPutchar(fd,'x');
 }
 
 void Logic::run()
 {
     while(!m_stopFlag)
     {
-        unsigned char msg = 0;
-//        int msg = 0;
-        int idx = 0;
+        int msg = 0b00000000;
 
         // motor
 //        if (rainClose() == 1 || gyroClose() == 1) status = CLOSE;
-        if (rainClose() == 1)
-        {
-            status = CLOSE;
-            idx = 1;
-        }
-        else
-        {
-            status = OPEN;
-            idx = 0;
-        }
+//        if (rainClose() == 1) status = CLOSE;
+//        else status = OPEN;
 
         if (status == CLOSE)
         {
             if (gUwave > CLOSE_LENGTH)
             {
-                msg += 1 << WINDOW_SET;
+                msg += (1 << WINDOW_SET);
             }
         }
         else
         {
             if (gUwave > OPEN_LENGTH)
             {
-                msg += 1 << WINDOW_SET;
-                msg += 1 << WINDOW_DIR; // ccw
+                msg += (1 << WINDOW_SET);
+                msg += (1 << WINDOW_DIR); // ccw
             }
         }
 
@@ -58,14 +51,15 @@ void Logic::run()
         // buzzer
         if (pirUwaveBuzzer() == 1)
         {
-            msg += 1 << BUZZER;
+            msg += (1 << BUZZER);
         }
 
-        //
-       emit ThreadEnd(msg);
-//        emit ThreadEnd(idx);
+        serialPutchar(fd, msg);
+        emit ThreadEnd(gUwave);
+
        sleep(1);
     }
+
 }
 
 int Logic::gyroClose()

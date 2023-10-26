@@ -18,6 +18,7 @@ extern int gUwave;
 extern int gRain;
 extern double gGyroX;
 extern double gGyroY;
+extern int gYsig;
 
 class MainWindow : public QMainWindow
 {

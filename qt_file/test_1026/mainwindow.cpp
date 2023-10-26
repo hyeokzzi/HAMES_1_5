@@ -10,6 +10,7 @@ int gUwave = 0;
 int gRain = 0;
 double gGyroX = 0.0;
 double gGyroY = 0.0;
+int gYsig = 0;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -101,17 +102,17 @@ void MainWindow::printScreen4(int idx){
     ui->textBrowser->insertPlainText(string);
 }
 void MainWindow::printScreen5(int idx){
-//    QString string = QString::number(idx);
-//    string += ": LOGIC\n";
-//    ui->textBrowser->insertPlainText(string);
-
-    QString string;
-    string += QString::number((idx & 0b00100000) >> 5);
-    string += QString::number((idx & 0b00010000) >> 4);
-    string += QString::number((idx & 0b00001000) >> 3);
-    string += QString::number((idx & 0b00000100) >> 2);
-    string += QString::number((idx & 0b00000010) >> 1);
-    string += QString::number(idx & 0b00000001);
-    string += " : LOGIC\n";
+    QString string = QString::number(idx);
+    string += ": LOGIC\n";
     ui->textBrowser->insertPlainText(string);
+
+//    QString string;
+//    string += QString::number((idx & 0b00100000) >> 5);
+//    string += QString::number((idx & 0b00010000) >> 4);
+//    string += QString::number((idx & 0b00001000) >> 3);
+//    string += QString::number((idx & 0b00000100) >> 2);
+//    string += QString::number((idx & 0b00000010) >> 1);
+//    string += QString::number(idx & 0b00000001);
+//    string += " : LOGIC\n";
+//    ui->textBrowser->insertPlainText(string);
 }
