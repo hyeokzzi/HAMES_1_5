@@ -25,11 +25,11 @@ Logic::Logic(QObject *parent) : QThread(parent)
     pre_dist = 0;
     stop_moving = 0;
 
-    gWindowState = OPEN;
+    gWindowState = CLOSE;
 //    gCoverState = CLOSE;
     gOpenDegree = 100;
     gLED = 0;
-    gUserMode = 0;
+    gUserMode = 1;
 
     fd = serialOpen("/dev/ttyACM0",9600);
     serialPutchar(fd,'x');
@@ -108,11 +108,11 @@ void Logic::run()
         else // Smart Mode
         {
             // motor
-//            if (rainClose() == 1 || gyroClose() == 1)
-//            {
-//                gWindowState = CLOSE;
-//                stop_moving = 0;
-//            }
+            if (rainClose() == 1 || gyroClose() == 1)
+            {
+                gWindowState = CLOSE;
+                stop_moving = 0;
+            }
 
             // led (TODO: QT button input)
 //            if (gLED == 1)

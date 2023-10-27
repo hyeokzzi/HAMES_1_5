@@ -51,7 +51,7 @@ void Rain_Sensor::run()
 
         digitalWrite(CS_MCP3208, 1);
         //
-//        emit ThreadEnd(gRain);
+        emit ThreadEnd(gJoystick);
         sleep(1);
     }
 }

@@ -13,5 +13,7 @@
 // uwave
 #define UWAVE_TRIG_PIN 18
 #define UWAVE_ECHO_PIN 21
+//#define UWAVE_TRIG_PIN 1
+//#define UWAVE_ECHO_PIN 29
 
 #endif // GPIO_H

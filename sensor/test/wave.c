@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <wiringPi.h>
 
+//#define trigPin 18  // gpio 18
+//#define echoPin 21 // gpio 21
 #define trigPin 1  // gpio 18
 #define echoPin 29 // gpio 21
 

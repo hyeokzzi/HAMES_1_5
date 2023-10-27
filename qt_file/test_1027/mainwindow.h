@@ -7,6 +7,7 @@
 #include "rain_sensor.h"
 #include "uwave_sensor.h"
 #include "logic.h"
+#include "button.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -19,6 +20,8 @@ extern int gRain;
 extern double gGyroX;
 extern double gGyroY;
 extern int gJoystick;
+extern int gOpenButton;
+extern int gCloseButton;
 
 extern int gWindowState;
 extern int gCoverState;
@@ -40,6 +43,7 @@ public slots:
     void printScreen3(int);
     void printScreen4(int);
     void printScreen5(int);
+//    void printScreen6(int);
 
 private slots:
     void on_pushButton_3_clicked();
@@ -58,6 +62,7 @@ private:
     Rain_Sensor *rain_thread;
     UWAVE_Sensor *uwave_thread;
     Logic *logic_thread;
+//    Button *button_thread;
 
 };
 #endif // MAINWINDOW_H

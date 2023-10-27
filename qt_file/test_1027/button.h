@@ -10,20 +10,17 @@
 //#include <stdlib.h>
 //#include <stdint.h>
 
-//class PIR_Sensor: public QThread
+//class Button: public QThread
 //{
 //    Q_OBJECT
 //public:
-//    explicit PIR_Sensor(QObject *parent = 0);
+//    explicit Button(QObject *parent = 0);
 //    void stop();
 
-//    uint8_t getPirData();
 //    int m_stopFlag = false;
 
 //private:
 //    void run();
-//    int idx = 2;
-//    int _detected;
 
 //signals:
 //    void ThreadEnd(int);

@@ -17,7 +17,7 @@ void PIR_Sensor::run()
         gPir = digitalRead(PIR_GPIO_IN);
 
         //
-       emit ThreadEnd(gPir);
+//       emit ThreadEnd(gPir);
        sleep(1);
     }
 }
