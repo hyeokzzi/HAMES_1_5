@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 
 extern int gRain;
+extern int gYsig;
 
 int read_mcp3208_adc();
 Rain_Sensor::Rain_Sensor(QObject *parent) : QThread(parent)
@@ -35,8 +36,20 @@ void Rain_Sensor::run()
 
         digitalWrite(CS_MCP3208, 1);
 
+        buff[0] = (0x01 & 0xff);
+        buff[1] = (0xe0 & 0xff) ;
+        buff[2] = 0x00;
+
+        digitalWrite(CS_MCP3208, 0);
+        wiringPiSPIDataRW(SPI_CHANNEL, buff, 3);
+
+        buff[1] = 0x0f & buff[1];
+//        adcValue = (buff[1] << 8 ) | buff[2];
+        gYsig = (buff[1] << 8 ) | buff[2];
+
+        digitalWrite(CS_MCP3208, 1);
         //
-//        emit ThreadEnd(gRain);
+        emit ThreadEnd(gYsig);
         sleep(1);
     }
 }
