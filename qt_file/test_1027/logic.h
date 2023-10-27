@@ -18,15 +18,10 @@ using namespace std;
 
 #define MAX_Q_SIZE 35
 #define DIST_STDEV_TH 1
-#define RAIN_TH 2500
+#define RAIN_TH 4000
 
-#define CLOSE_LENGTH 5
-#define OPEN_LENGTH 20
-//#define OPEN_LENGTH_0 4
-//#define OPEN_LENGTH_1 8
-//#define OPEN_LENGTH_2 12
-//#define OPEN_LENGTH_3 16
-//#define OPEN_LENGTH_FULL 20
+#define CLOSE_LENGTH 4
+#define OPEN_LENGTH 10
 
 #define CW 0 // close
 #define CCW 1 // open

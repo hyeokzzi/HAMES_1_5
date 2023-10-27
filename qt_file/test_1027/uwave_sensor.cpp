@@ -1,5 +1,6 @@
 #include "uwave_sensor.h"
 #include "mainwindow.h"
+#include "gpio.h"
 
 extern int gUwave;
 

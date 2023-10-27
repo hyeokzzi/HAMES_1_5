@@ -10,9 +10,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define UWAVE_TRIG_PIN 18
-#define UWAVE_ECHO_PIN 21
-
 class UWAVE_Sensor: public QThread
 {
     Q_OBJECT

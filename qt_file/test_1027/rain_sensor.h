@@ -11,7 +11,6 @@
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
 
-#define CS_MCP3208 8 //GPIO 8
 #define SPI_CHANNEL 0
 #define SPI_SPEED 1000000 //1Mhz
 

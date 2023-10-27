@@ -1,5 +1,6 @@
 #include "rain_sensor.h"
 #include "mainwindow.h"
+#include "gpio.h"
 
 extern int gRain;
 extern int gJoystick;
@@ -50,7 +51,7 @@ void Rain_Sensor::run()
 
         digitalWrite(CS_MCP3208, 1);
         //
-        emit ThreadEnd(gJoystick);
+//        emit ThreadEnd(gRain);
         sleep(1);
     }
 }

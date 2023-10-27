@@ -10,8 +10,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define PIR_GPIO_IN 17
-
 class PIR_Sensor: public QThread
 {
     Q_OBJECT

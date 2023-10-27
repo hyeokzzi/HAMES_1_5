@@ -1,5 +1,6 @@
 #include "logic.h"
 #include "mainwindow.h"
+#include "gpio.h"
 
 extern int gPir;
 extern int gUwave;
@@ -15,7 +16,7 @@ extern int gWindowState;
 extern int gCoverState;
 extern int gOpenDegree;
 extern int gLED;
-extern int gUserMode;
+extern int gUserMode; // 0: smart mode, 1: user mode
 
 Logic::Logic(QObject *parent) : QThread(parent)
 {
@@ -28,7 +29,7 @@ Logic::Logic(QObject *parent) : QThread(parent)
 //    gCoverState = CLOSE;
     gOpenDegree = 100;
     gLED = 0;
-    gUserMode = 1;
+    gUserMode = 0;
 
     fd = serialOpen("/dev/ttyACM0",9600);
     serialPutchar(fd,'x');
@@ -78,10 +79,12 @@ void Logic::run()
 //                if (gCoverState != OPEN)
 //                {
 //                    gCoverState = OPEN;
+//                    stop_moving = 0;
 //                }
                 if (gWindowState != OPEN)
                 {
                     gWindowState = OPEN;
+                    stop_moving = 0;
                 }
             }
             else if (gJoystick < 3500)
@@ -105,14 +108,17 @@ void Logic::run()
         else // Smart Mode
         {
             // motor
-            if (rainClose() == 1 || gyroClose() == 1) gWindowState = CLOSE;
-            else gWindowState = OPEN;
+//            if (rainClose() == 1 || gyroClose() == 1)
+//            {
+//                gWindowState = CLOSE;
+//                stop_moving = 0;
+//            }
 
             // led (TODO: QT button input)
-            if (gLED == 1)
-            {
-                msg += 1 << LED;
-            }
+//            if (gLED == 1)
+//            {
+//                msg += (1 << LED);
+//            }
 
             // buzzer
             if (pirUwaveBuzzer() == 1)
@@ -123,6 +129,7 @@ void Logic::run()
 
         serialPutchar(fd, msg);
         emit ThreadEnd(msg);
+        emit ThreadEnd(gWindowState);
 
        sleep(1);
     }
@@ -154,14 +161,16 @@ int Logic::windowClose(int msg)
 }
 int Logic::windowOpen(int msg)
 {
-    if (gUwave > 70) return msg;
-
-    int th = gOpenDegree / 100 * OPEN_LENGTH;
-//    int th = OPEN_LENGTH;
-    if (gUwave < th)
+//    int th = gOpenDegree / 100 * OPEN_LENGTH;
+    int th = OPEN_LENGTH;
+    if ((stop_moving == 0) && ((gUwave < th) || (gUwave > 80)))
     {
         msg += (1 << WINDOW_SET);
         msg += (1 << WINDOW_DIR); // ccw, open
+    }
+    else
+    {
+        stop_moving = 1;
     }
     return msg;
 }

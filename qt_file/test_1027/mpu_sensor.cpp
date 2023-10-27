@@ -1,5 +1,6 @@
 #include "mpu_sensor.h"
 #include "mainwindow.h"
+#include "gpio.h"
 
 extern double gGyroX;
 extern double gGyroY;
