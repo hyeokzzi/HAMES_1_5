@@ -10,6 +10,7 @@ extern int gJoystick;
 extern int gOpenButton; // Cover Button
 extern int gCloseButton; // Cover Button
 
+// init?
 extern int gWindowState;
 extern int gCoverState;
 extern int gOpenDegree;
@@ -21,7 +22,13 @@ Logic::Logic(QObject *parent) : QThread(parent)
     pre_detected = 0;
     tmp_detected = 0;
     pre_dist = 0;
-    gWindowState = CLOSE;
+    stop_moving = 0;
+
+    gWindowState = OPEN;
+//    gCoverState = CLOSE;
+    gOpenDegree = 100;
+    gLED = 0;
+    gUserMode = 1;
 
     fd = serialOpen("/dev/ttyACM0",9600);
     serialPutchar(fd,'x');
@@ -68,8 +75,14 @@ void Logic::run()
         {
             if (gJoystick < 3000)
             {
-                gCoverState = OPEN;
-                gWindowState = OPEN;
+//                if (gCoverState != OPEN)
+//                {
+//                    gCoverState = OPEN;
+//                }
+                if (gWindowState != OPEN)
+                {
+                    gWindowState = OPEN;
+                }
             }
             else if (gJoystick < 3500)
             {
@@ -77,8 +90,16 @@ void Logic::run()
             }
             else
             {
-                gCoverState = CLOSE;
-                gWindowState = CLOSE;
+//                if (gCoverState != CLOSE)
+//                {
+//                    gCoverState = CLOSE;
+//                    stop_moving = 0;
+//                }
+                if (gWindowState != CLOSE)
+                {
+                    gWindowState = CLOSE;
+                    stop_moving = 0;
+                }
             }
         }
         else // Smart Mode
@@ -101,7 +122,7 @@ void Logic::run()
         }
 
         serialPutchar(fd, msg);
-        emit ThreadEnd(gUwave);
+        emit ThreadEnd(msg);
 
        sleep(1);
     }
@@ -121,45 +142,27 @@ int Logic::coverOpen(int msg)
 }
 int Logic::windowClose(int msg)
 {
-    if (gUwave > CLOSE_LENGTH)
+    if ((stop_moving == 0) && (gUwave > CLOSE_LENGTH))
     {
         msg += (1 << WINDOW_SET); // cw, close
+    }
+    else
+    {
+        stop_moving = 1;
     }
     return msg;
 }
 int Logic::windowOpen(int msg)
 {
-    if (gUwave > (gOpenDegree / 100 * OPEN_LENGTH))
+    if (gUwave > 70) return msg;
+
+    int th = gOpenDegree / 100 * OPEN_LENGTH;
+//    int th = OPEN_LENGTH;
+    if (gUwave < th)
     {
         msg += (1 << WINDOW_SET);
         msg += (1 << WINDOW_DIR); // ccw, open
     }
-
-//    if ((gOpenDegree == 0) && (gUwave > OPEN_LENGTH_0))
-//    {
-//        msg += (1 << WINDOW_SET);
-//        msg += (1 << WINDOW_DIR); // ccw, open
-//    }
-//    else if ((gOpenDegree == 1) && (gUwave > OPEN_LENGTH_1))
-//    {
-//        msg += (1 << WINDOW_SET);
-//        msg += (1 << WINDOW_DIR); // ccw, open
-//    }
-//    else if ((gOpenDegree == 2) && (gUwave > OPEN_LENGTH_2))
-//    {
-//        msg += (1 << WINDOW_SET);
-//        msg += (1 << WINDOW_DIR); // ccw, open
-//    }
-//    else if ((gOpenDegree == 3) && (gUwave > OPEN_LENGTH_3))
-//    {
-//        msg += (1 << WINDOW_SET);
-//        msg += (1 << WINDOW_DIR); // ccw, open
-//    }
-//    else if ((gOpenDegree == 4) && (gUwave > OPEN_LENGTH_FULL))
-//    {
-//        msg += (1 << WINDOW_SET);
-//        msg += (1 << WINDOW_DIR); // ccw, open
-//    }
     return msg;
 }
 

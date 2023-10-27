@@ -71,6 +71,7 @@ private:
     uint8_t pre_detected;
     uint8_t tmp_detected;
     uint8_t pre_dist;
+    uint8_t stop_moving;
 
     deque<int> Q;
     int fd;
