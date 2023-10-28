@@ -11,6 +11,9 @@ extern int gJoystick;
 extern int gOpenButton; // Cover Button
 extern int gCloseButton; // Cover Button
 
+extern int g_stop_moving_cover;
+extern int g_stop_moving_window;
+
 // init?
 extern int gWindowState;
 extern int gCoverState;
@@ -23,14 +26,12 @@ Logic::Logic(QObject *parent) : QThread(parent)
     pre_detected = 0;
     tmp_detected = 0;
     pre_dist = 0;
-    stop_moving_cover = 1;
-    stop_moving_window = 1;
 
     gWindowState = CLOSE;
     gCoverState = CLOSE;
     gOpenDegree = 100;
     gLED = 0;
-    gUserMode = 1;
+    gUserMode = 0;
 
     fd = serialOpen("/dev/ttyACM0",9600);
     serialPutchar(fd,'x');
@@ -51,8 +52,8 @@ void Logic::run()
         else
             qDebug() << QString("gCoverState = close");
 
-        qDebug() << QString("stop_moving_window = ") << stop_moving_window;
-        qDebug() << QString("stop_moving_cover = ") << stop_moving_cover;
+        qDebug() << QString("g_stop_moving_window = ") << g_stop_moving_window;
+        qDebug() << QString("g_stop_moving_cover = ") << g_stop_moving_cover;
 
 
         // Set State
@@ -65,12 +66,12 @@ void Logic::run()
                 if (gCoverState != OPEN) // Cover
                 {
                     gCoverState = OPEN;
-                    stop_moving_cover = 0;
+                    g_stop_moving_cover = 0;
                 }
                 if (gWindowState != OPEN) // Window
                 {
                     gWindowState = OPEN;
-                    stop_moving_window = 0;
+                    g_stop_moving_window = 0;
                 }
             }
             else if (gJoystick < 3700)
@@ -84,40 +85,41 @@ void Logic::run()
                 if (gCoverState != CLOSE) // Cover
                 {
                     gCoverState = CLOSE;
-                    stop_moving_cover = 0;
+                    g_stop_moving_cover = 0;
                 }
                 if (gWindowState != CLOSE) // Window
                 {
                     gWindowState = CLOSE;
-                    stop_moving_window = 0;
+                    g_stop_moving_window = 0;
                 }
             }
         }
         else // Smart Mode
         {
             // motor
-            if (rainClose() == 1 || gyroClose() == 1)
-            {
-                gWindowState = CLOSE;
-                stop_moving_window = 0;
-            }
+//            if (rainClose() == 1 || gyroClose() == 1)
+//            {
+//                gWindowState = CLOSE;
+//                g_stop_moving_window = 0;
+//            }
 
-            // led (TODO: QT button input)
-            if (gLED == 1)
-            {
-                msg += (1 << LED);
-            }
+//            // led (TODO: QT button input)
+//            if (gLED == 1)
+//            {
+//                msg += (1 << LED);
+//            }
 
-            // buzzer
-            if (pirUwaveBuzzer() == 1)
-            {
-                msg += (1 << BUZZER);
-            }
+//            // buzzer
+//            if (pirUwaveBuzzer() == 1)
+//            {
+//                msg += (1 << BUZZER);
+//            }
         }
 
         // Motor Control
         qDebug() << QString("gOpenButton = ") << gOpenButton;
         qDebug() << QString("gCloseButton = ") << gCloseButton;
+        qDebug() << QString("UWAVE = ") << gUwave;
 //        qDebug() << QString("---------------------");
 //        if (gWindowState == CLOSE)
 //        {
@@ -136,13 +138,13 @@ void Logic::run()
         if ((gCoverState == CLOSE) && (gWindowState == CLOSE))
         {
             qDebug() << QString("Case 1");
-            if (stop_moving_window == 1) msg = coverClose(msg); // Window already closed
+            if (g_stop_moving_window == 1) msg = coverClose(msg); // Window already closed
             else msg = windowClose(msg);
         }
         else if ((gCoverState == OPEN) && (gWindowState == CLOSE))
         {
             qDebug() << QString("Case 2");
-            if (stop_moving_cover == 1) msg = windowClose(msg); // Cover already opened
+            if (g_stop_moving_cover == 1) msg = windowClose(msg); // Cover already opened
             else msg = coverOpen(msg);
         }
         else if ((gCoverState == CLOSE) && (gWindowState == OPEN))
@@ -153,7 +155,7 @@ void Logic::run()
         else if ((gCoverState == OPEN) && (gWindowState == OPEN))
         {
             qDebug() << QString("Case 4");
-            if (stop_moving_cover == 1) msg = windowOpen(msg); // Cover already opened
+            if (g_stop_moving_cover == 1) msg = windowOpen(msg); // Cover already opened
             else msg = coverOpen(msg);
         }
         else
@@ -185,53 +187,58 @@ void Logic::printMsg(int msg)
 
 int Logic::coverClose(int msg)
 {
-    if ((stop_moving_cover == 0) && (gCloseButton == 0))
+    if ((g_stop_moving_cover == 0) && (gCloseButton == 0))
     {
         msg += (1 << COVER_SET); // cw, close
     }
     else
     {
-        stop_moving_cover = 1;
+        g_stop_moving_cover = 1;
     }
     return msg;
 }
 int Logic::coverOpen(int msg)
 {
-    if ((stop_moving_cover == 0) && (gOpenButton == 0))
+    if ((g_stop_moving_cover == 0) && (gOpenButton == 0))
     {
         msg += (1 << COVER_SET);
         msg += (1 << COVER_DIR); // ccw, open
     }
     else
     {
-        stop_moving_cover = 1;
+        g_stop_moving_cover = 1;
     }
     return msg;
 }
 int Logic::windowClose(int msg)
 {
-    if ((stop_moving_window == 0) && ((gUwave > CLOSE_LENGTH) && (gUwave < 80)))
+    if ((g_stop_moving_window == 0) && ((gUwave > CLOSE_LENGTH) && (gUwave < 80)))
     {
         msg += (1 << WINDOW_SET); // cw, close
     }
     else
     {
-        stop_moving_window = 1;
+        g_stop_moving_window = 1;
     }
     return msg;
 }
 int Logic::windowOpen(int msg)
 {
-//    int th = gOpenDegree / 100 * OPEN_LENGTH;
-    int th = OPEN_LENGTH;
-    if ((stop_moving_window == 0) && ((gUwave < th) || (gUwave > 80)))
+    int th = gOpenDegree / 100.0 * OPEN_LENGTH;
+    qDebug() << QString("th = ") << th;
+
+    if ((g_stop_moving_window == 0) && ((gUwave < th - MARGIN) || (gUwave > 80)))
     {
         msg += (1 << WINDOW_SET);
         msg += (1 << WINDOW_DIR); // ccw, open
     }
+    else if ((g_stop_moving_window == 0) && ((gUwave > th + MARGIN) || (gUwave > 80)))
+    {
+        msg += (1 << WINDOW_SET);
+    }
     else
     {
-        stop_moving_window = 1;
+        g_stop_moving_window = 1;
     }
     return msg;
 }

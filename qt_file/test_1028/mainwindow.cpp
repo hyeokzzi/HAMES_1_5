@@ -49,10 +49,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(uwave_thread, SIGNAL(ThreadEnd(int)), this, SLOT(printScreen4(int)));
     uwave_thread->start();
 
-//    button_thread = new Button(this);
-//    connect(button_thread, SIGNAL(ThreadEnd(int)), this, SLOT(printScreen6(int)));
-//    button_thread->start();
-
     logic_thread = new Logic(this);
     connect(logic_thread, SIGNAL(ThreadEnd(int)), this, SLOT(printScreen5(int)));
     logic_thread->start();
@@ -65,7 +61,6 @@ MainWindow::~MainWindow()
     rain_thread->stop();
     uwave_thread->stop();
     logic_thread->stop();
-//    button_thread->stop();
     delete ui;
 }
 
@@ -81,7 +76,6 @@ void MainWindow::on_pushButton_2_clicked()
     rain_thread->start();
     uwave_thread->start();
     logic_thread->start();
-//    button_thread->start();
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -129,8 +123,3 @@ void MainWindow::printScreen5(int idx){
     string += " : LOGIC\n";
     ui->textBrowser->insertPlainText(string);
 }
-//void MainWindow::printScreen6(int idx){
-//    QString string = QString::number(idx);
-//    string += ": BUTTON\n";
-//    ui->textBrowser->insertPlainText(string);
-//}

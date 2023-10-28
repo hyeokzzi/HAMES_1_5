@@ -21,7 +21,7 @@ using namespace std;
 #define RAIN_TH 4000
 
 #define CLOSE_LENGTH 4
-#define OPEN_LENGTH 10
+#define OPEN_LENGTH 21
 
 #define CW 0 // close
 #define CCW 1 // open
@@ -29,6 +29,7 @@ using namespace std;
 #define SET 1
 #define CLOSE 0
 #define OPEN 1
+#define MARGIN 2
 
 enum {
     BUZZER = 0,

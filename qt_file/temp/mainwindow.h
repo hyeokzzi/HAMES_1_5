@@ -38,16 +38,18 @@ public:
     ~MainWindow();
 
 public slots:
-    void printScreen1(int);
-    void printScreen2(int);
-    void printScreen3(int);
-    void printScreen4(int);
-    void printScreen5(int);
+
 
 private slots:
-    void on_pushButton_3_clicked();
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_AutoMode_clicked();
+    void on_RefreshMode_clicked();
+    void on_LightMode_clicked();
+    void on_SelectMode_clicked();
+    void on_userMode_clicked();
+    void on_Btn_cover_clicked();
+    void on_WindowSlider_valueChanged(int value);
+
+    void on_WindowSlider_sliderReleased();
 
 private:
     Ui::MainWindow *ui;
