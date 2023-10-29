@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    
 private slots:
 
     void on_AutoMode_clicked();
@@ -33,7 +33,5 @@ private slots:
 
     void on_WindowSlider_valueChanged(int value);
 
-private:
-    Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

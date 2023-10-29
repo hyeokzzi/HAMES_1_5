@@ -138,4 +138,3 @@ void MainWindow::on_WindowSlider_valueChanged(int value)
     // Value = value;
     //ui->textBrowser->insertPlainText(string);
 }
-
