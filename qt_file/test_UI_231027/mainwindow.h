@@ -14,8 +14,24 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    
+private slots:
 
-private:
-    Ui::MainWindow *ui;
+    void on_AutoMode_clicked();
+
+    void on_RefreshMode_clicked();
+
+    void on_LightMode_clicked();
+
+    void on_SelectMode_clicked();
+
+    void on_userMode_clicked();
+
+
+
+    void on_Btn_cover_clicked();
+
+    void on_WindowSlider_valueChanged(int value);
+
 };
 #endif // MAINWINDOW_H
