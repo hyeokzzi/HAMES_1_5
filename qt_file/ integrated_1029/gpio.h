@@ -2,8 +2,8 @@
 #define GPIO_H
 
 // cover open/close button
-#define OPEN_BTN_GPIO 23
-#define CLOSE_BTN_GPIO 24
+#define OPEN_BTN_GPIO 24
+#define CLOSE_BTN_GPIO 23
 
 // PIR sensor
 #define PIR_GPIO_IN 17
