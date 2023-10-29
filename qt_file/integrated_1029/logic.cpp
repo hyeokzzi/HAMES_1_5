@@ -31,7 +31,7 @@ Logic::Logic(QObject *parent) : QThread(parent)
     gCoverState = CLOSE;
     gOpenDegree = 100;
     gLED = 0;
-    gUserMode = 0;
+    gUserMode = 1;
 
     fd = serialOpen("/dev/ttyACM0",9600);
     serialPutchar(fd,'x');
@@ -59,6 +59,7 @@ void Logic::run()
         // Set State
         if (gUserMode == 1) // User Mode
         {
+            qDebug() << QString("gJoystick = ") << gJoystick;
             if (gJoystick < 3000) // up, open
             {
                 qDebug() << QString("!!! Joystick OPEN !!!");
@@ -97,41 +98,34 @@ void Logic::run()
         else // Smart Mode
         {
             // motor
-//            if (rainClose() == 1 || gyroClose() == 1)
-//            {
-//                gWindowState = CLOSE;
-//                g_stop_moving_window = 0;
-//            }
+            if (rainClose() == 1 || gyroClose() == 1)
+            {
+                gWindowState = CLOSE;
+                g_stop_moving_window = 0;
+            }
 
-//            // led (TODO: QT button input)
-//            if (gLED == 1)
-//            {
-//                msg += (1 << LED);
-//            }
+            // led (TODO: QT button input)
+            if (gLED == 1)
+            {
+                msg += (1 << LED);
+            }
 
-//            // buzzer
-//            if (pirUwaveBuzzer() == 1)
-//            {
-//                msg += (1 << BUZZER);
-//            }
+            // buzzer
+            if (pirUwaveBuzzer() == 1)
+            {
+                msg += (1 << BUZZER);
+            }
         }
 
         // Motor Control
         qDebug() << QString("gOpenButton = ") << gOpenButton;
         qDebug() << QString("gCloseButton = ") << gCloseButton;
         qDebug() << QString("UWAVE = ") << gUwave;
-//        qDebug() << QString("---------------------");
+
 //        if (gWindowState == CLOSE)
-//        {
-//            qDebug() << QString("Motor: window close");
 //            msg = windowClose(msg);
-//        }
 //        else
-//        {
-//            qDebug() << QString("Motor: window open");
 //            msg = windowOpen(msg);
-//        }
-//        qDebug() << QString("---------------------");
 
         qDebug() << QString("==========================================");
 
@@ -189,7 +183,7 @@ int Logic::coverClose(int msg)
 {
     if ((g_stop_moving_cover == 0) && (gCloseButton == 0))
     {
-        msg += (1 << COVER_SET); // cw, close
+        msg += (1 << COVER_SET); // cw, cover close
     }
     else
     {
@@ -202,7 +196,7 @@ int Logic::coverOpen(int msg)
     if ((g_stop_moving_cover == 0) && (gOpenButton == 0))
     {
         msg += (1 << COVER_SET);
-        msg += (1 << COVER_DIR); // ccw, open
+        msg += (1 << COVER_DIR); // ccw, cover open
     }
     else
     {
@@ -214,7 +208,8 @@ int Logic::windowClose(int msg)
 {
     if ((g_stop_moving_window == 0) && ((gUwave > CLOSE_LENGTH) && (gUwave < 80)))
     {
-        msg += (1 << WINDOW_SET); // cw, close
+        msg += (1 << WINDOW_SET);
+        msg += (1 << WINDOW_DIR); // ccw, window close
     }
     else
     {
@@ -229,12 +224,12 @@ int Logic::windowOpen(int msg)
 
     if ((g_stop_moving_window == 0) && ((gUwave < th - MARGIN) || (gUwave > 80)))
     {
-        msg += (1 << WINDOW_SET);
-        msg += (1 << WINDOW_DIR); // ccw, open
+        msg += (1 << WINDOW_SET); // cw, window open
     }
     else if ((g_stop_moving_window == 0) && ((gUwave > th + MARGIN) || (gUwave > 80)))
     {
         msg += (1 << WINDOW_SET);
+        msg += (1 << WINDOW_DIR); // ccw, window close
     }
     else
     {

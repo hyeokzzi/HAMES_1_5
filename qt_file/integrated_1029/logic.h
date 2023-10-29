@@ -23,8 +23,6 @@ using namespace std;
 #define CLOSE_LENGTH 4
 #define OPEN_LENGTH 21
 
-#define CW 0 // close
-#define CCW 1 // open
 #define UNSET 0
 #define SET 1
 #define CLOSE 0

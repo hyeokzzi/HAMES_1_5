@@ -7,7 +7,6 @@
 #include "rain_sensor.h"
 #include "uwave_sensor.h"
 #include "logic.h"
-#include "button.h"
 
 
 QT_BEGIN_NAMESPACE
