@@ -3,11 +3,14 @@
 #include "gpio.h"
 
 extern int gUwave;
+extern int gUwave2;
 
 UWAVE_Sensor::UWAVE_Sensor(QObject *parent) : QThread(parent)
 {
     pinMode(UWAVE_TRIG_PIN, OUTPUT);
     pinMode(UWAVE_ECHO_PIN, INPUT);
+    pinMode(UWAVE_TRIG_PIN_2, OUTPUT);
+    pinMode(UWAVE_ECHO_PIN_2, INPUT);
 }
 void UWAVE_Sensor::run()
 {
@@ -32,8 +35,29 @@ void UWAVE_Sensor::run()
         travelTime = micros() - startTime;
 
         gUwave = travelTime / 58;
+
         //
-        emit ThreadEnd(gUwave);
+
+        digitalWrite(UWAVE_TRIG_PIN_2, LOW);
+        usleep(2);
+        digitalWrite(UWAVE_TRIG_PIN_2, HIGH);
+        usleep(20);
+        digitalWrite(UWAVE_TRIG_PIN_2, LOW);
+
+        while (digitalRead(UWAVE_ECHO_PIN_2) == LOW)
+            ;
+        startTime = micros();
+
+        while (digitalRead(UWAVE_ECHO_PIN_2) == HIGH)
+            ;
+        travelTime = micros() - startTime;
+
+        gUwave2 = travelTime / 58;
+
+        qDebug() << QString("gUwave = ") << gUwave;
+        qDebug() << QString("gUwave2 = ") << gUwave2;
+        //
+//        emit ThreadEnd(gUwave);
         sleep(1);
     }
 }

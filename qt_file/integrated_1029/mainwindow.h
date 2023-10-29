@@ -15,6 +15,7 @@ QT_END_NAMESPACE
 
 extern int gPir;
 extern int gUwave;
+extern int gUwave2;
 extern int gRain;
 extern double gGyroX;
 extern double gGyroY;

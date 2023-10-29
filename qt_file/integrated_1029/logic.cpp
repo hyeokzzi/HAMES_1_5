@@ -4,6 +4,7 @@
 
 extern int gPir;
 extern int gUwave;
+extern int gUwave2;
 extern int gRain;
 extern double gGyroX;
 extern double gGyroY;
@@ -27,11 +28,11 @@ Logic::Logic(QObject *parent) : QThread(parent)
     tmp_detected = 0;
     pre_dist = 0;
 
-    gWindowState = CLOSE;
-    gCoverState = CLOSE;
+    gWindowState = OPEN;
+    gCoverState = OPEN;
     gOpenDegree = 100;
     gLED = 0;
-    gUserMode = 1;
+    gUserMode = 0;
 
     fd = serialOpen("/dev/ttyACM0",9600);
     serialPutchar(fd,'x');
@@ -56,63 +57,70 @@ void Logic::run()
         qDebug() << QString("g_stop_moving_cover = ") << g_stop_moving_cover;
 
 
-        // Set State
-        if (gUserMode == 1) // User Mode
+        qDebug() << QString("gJoystick = ") << gJoystick;
+        if (gJoystick < 3000) // up, open
         {
-            qDebug() << QString("gJoystick = ") << gJoystick;
-            if (gJoystick < 3000) // up, open
-            {
-                qDebug() << QString("!!! Joystick OPEN !!!");
+            qDebug() << QString("!!! Joystick OPEN !!!");
 
-                if (gCoverState != OPEN) // Cover
-                {
-                    gCoverState = OPEN;
-                    g_stop_moving_cover = 0;
-                }
-                if (gWindowState != OPEN) // Window
-                {
-                    gWindowState = OPEN;
-                    g_stop_moving_window = 0;
-                }
-            }
-            else if (gJoystick < 3700)
+            if (gCoverState != OPEN) // Cover
             {
-                /* do nothing */
+                gCoverState = OPEN;
+                g_stop_moving_cover = 0;
             }
-            else // down, close
+            if (gWindowState != OPEN) // Window
             {
-                qDebug() << QString("!!! Joystick CLOSE !!!");
-
-                if (gCoverState != CLOSE) // Cover
-                {
-                    gCoverState = CLOSE;
-                    g_stop_moving_cover = 0;
-                }
-                if (gWindowState != CLOSE) // Window
-                {
-                    gWindowState = CLOSE;
-                    g_stop_moving_window = 0;
-                }
+                gWindowState = OPEN;
+                g_stop_moving_window = 0;
             }
         }
-        else // Smart Mode
+        else if (gJoystick < 3700)
         {
-            // motor
-            if (rainClose() == 1 || gyroClose() == 1)
+            /* do nothing */
+        }
+        else // down, close
+        {
+            qDebug() << QString("!!! Joystick CLOSE !!!");
+
+            if (gCoverState != CLOSE) // Cover
+            {
+                gCoverState = CLOSE;
+                g_stop_moving_cover = 0;
+            }
+            if (gWindowState != CLOSE) // Window
             {
                 gWindowState = CLOSE;
                 g_stop_moving_window = 0;
             }
+        }
 
-            // led (TODO: QT button input)
-            if (gLED == 1)
+        if (gUserMode == 0) // Smart Mode
+        {
+            // motor
+            if (rainClose() == 1)
             {
-                msg += (1 << LED);
+                qDebug() << QString("!!! RAIN !!!");
+                gWindowState = CLOSE;
+                g_stop_moving_window = 0;
             }
+            if (gyroClose() == 1)
+            {
+                qDebug() << QString("!!! GYRO !!!");
+                gWindowState = CLOSE;
+                gCoverState = CLOSE;
+                g_stop_moving_window = 0;
+            }
+
+//            // led (TODO: QT button input)
+//            if (gLED == 1)
+//            {
+//                qDebug() << QString("!!! LED !!!");
+//                msg += (1 << LED);
+//            }
 
             // buzzer
             if (pirUwaveBuzzer() == 1)
             {
+                qDebug() << QString("!!! BUZZER !!!");
                 msg += (1 << BUZZER);
             }
         }
@@ -181,7 +189,8 @@ void Logic::printMsg(int msg)
 
 int Logic::coverClose(int msg)
 {
-    if ((g_stop_moving_cover == 0) && (gCloseButton == 0))
+//    if ((g_stop_moving_cover == 0) && (gCloseButton == 0))
+    if ((g_stop_moving_cover == 0) && ((gUwave2 > CLOSE_LENGTH) && (gUwave2 < 80)))
     {
         msg += (1 << COVER_SET); // cw, cover close
     }
@@ -193,7 +202,8 @@ int Logic::coverClose(int msg)
 }
 int Logic::coverOpen(int msg)
 {
-    if ((g_stop_moving_cover == 0) && (gOpenButton == 0))
+//    if ((g_stop_moving_cover == 0) && (gOpenButton == 0))
+    if ((g_stop_moving_cover == 0) && ((gUwave2 < OPEN_LENGTH) || (gUwave2 > 80)))
     {
         msg += (1 << COVER_SET);
         msg += (1 << COVER_DIR); // ccw, cover open
@@ -275,8 +285,11 @@ int Logic::pirUwaveBuzzer()
 {
     int res = 0;
 
-    if (Q.size() == MAX_Q_SIZE) Q.pop_front();
-    Q.push_back(gUwave);
+    if (gUwave < 80) // trash value filtering
+    {
+        if (Q.size() == MAX_Q_SIZE) Q.pop_front();
+        Q.push_back(gUwave);
+    }
 
     tmp_detected = gPir;
 

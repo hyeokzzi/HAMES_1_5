@@ -12,6 +12,7 @@ int Value =0;
 
 int gPir = 0;
 int gUwave = 0;
+int gUwave2 = 0;
 int gRain = 0;
 double gGyroX = 0.0;
 double gGyroY = 0.0;
