@@ -28,9 +28,12 @@ Logic::Logic(QObject *parent) : QThread(parent)
     tmp_detected = 0;
     pre_dist = 0;
 
+    g_stop_moving_cover = 1;
+    g_stop_moving_cover = 1;
+
     gWindowState = OPEN;
     gCoverState = OPEN;
-    gOpenDegree = 100;
+    gOpenDegree = 0;
     gLED = 0;
     gUserMode = 0;
 
@@ -108,14 +111,15 @@ void Logic::run()
                 gWindowState = CLOSE;
                 gCoverState = CLOSE;
                 g_stop_moving_window = 0;
+                g_stop_moving_cover = 0;
             }
 
-//            // led (TODO: QT button input)
-//            if (gLED == 1)
-//            {
-//                qDebug() << QString("!!! LED !!!");
-//                msg += (1 << LED);
-//            }
+            // led
+            if (gLED == 1)
+            {
+                qDebug() << QString("!!! LED !!!");
+                msg += (1 << LED);
+            }
 
             // buzzer
             if (pirUwaveBuzzer() == 1)

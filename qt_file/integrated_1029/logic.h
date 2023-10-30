@@ -20,8 +20,8 @@ using namespace std;
 #define DIST_STDEV_TH 2
 #define RAIN_TH 4000
 
-#define CLOSE_LENGTH 5
-#define OPEN_LENGTH 16
+#define CLOSE_LENGTH 3
+#define OPEN_LENGTH 18
 
 #define UNSET 0
 #define SET 1

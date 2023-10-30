@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->Select_groupBox->setHidden(1);
     ui->Cover_groupBox->setHidden(1);
-    QPixmap pix("/home/pi/HAMES_1_5/qt_file/temp/image/car_0.png");
+    QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_0.png");
     ui -> label_image -> setPixmap(pix);
 
 
@@ -90,11 +90,12 @@ void MainWindow::on_userMode_clicked()
     UserMode_state = !UserMode_state;
 
     gUserMode = UserMode_state; // set
+    gLED = 0;
 
     if(UserMode_state == 0){
         ui->Mode_groupBox->setEnabled(1);
         ui->label_image->setEnabled(1);
-        QPixmap pix("/home/pi/HAMES_1_5/qt_file/temp/image/car_0.png");
+        QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_0.png");
         ui -> label_image -> setPixmap(pix);
     }
     else if(UserMode_state == 1){
@@ -110,17 +111,45 @@ void MainWindow::on_userMode_clicked()
 void MainWindow::on_AutoMode_clicked()
 {
     // set variable
-    gCoverState = OPEN;
-    gWindowState = OPEN;
-    g_stop_moving_cover = 0;
-    g_stop_moving_window = 0;
-    gOpenDegree = 100;
+    if (gCoverState == OPEN)
+    {
+        if (gOpenDegree < 100)
+        {
+            gCoverState = OPEN;
+            gWindowState = OPEN;
+            g_stop_moving_cover = 0;
+            g_stop_moving_window = 0;
+            gOpenDegree = 100;
+        }
+        else
+        {
+            gCoverState = CLOSE;
+            gWindowState = CLOSE;
+            g_stop_moving_cover = 0;
+            g_stop_moving_window = 0;
+            gOpenDegree = 100;
+        }
+    }
+    else
+    {
+        gCoverState = OPEN;
+        gWindowState = OPEN;
+        g_stop_moving_cover = 0;
+        g_stop_moving_window = 0;
+        gOpenDegree = 100;
+    }
+    gLED = 0;
+//    gCoverState = OPEN;
+//    gWindowState = OPEN;
+//    g_stop_moving_cover = 0;
+//    g_stop_moving_window = 0;
+//    gOpenDegree = 100;
 
 
     // set ui
      ui->Select_groupBox->setHidden(1);
      ui->Cover_groupBox->setHidden(1);
-     QPixmap pix("/home/pi/HAMES_1_5/qt_file/temp/image/car_100.png");
+     QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_100.png");
      ui -> label_image -> setPixmap(pix);
 }
 
@@ -132,11 +161,12 @@ void MainWindow::on_RefreshMode_clicked()
     gWindowState = OPEN;
     g_stop_moving_cover = 0;
     g_stop_moving_window = 0;
-    gOpenDegree = 20;
+    gOpenDegree = 30;
+    gLED = 0;
 
      ui->Select_groupBox->setHidden(1);
      ui->Cover_groupBox->setHidden(1);
-     QPixmap pix("/home/pi/HAMES_1_5/qt_file/temp/image/car_20.png");
+     QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_20.png");
      ui -> label_image -> setPixmap(pix);
 
 }
@@ -144,29 +174,40 @@ void MainWindow::on_RefreshMode_clicked()
 
 void MainWindow::on_LightMode_clicked()
 {
+    ui->Select_groupBox->setHidden(1);
+    ui->Cover_groupBox->setHidden(1);
     // set variable
-    gCoverState = OPEN;
-    gWindowState = CLOSE;
-    g_stop_moving_cover = 0;
-    g_stop_moving_window = 0;
-    gOpenDegree = 100;
-
-     ui->Select_groupBox->setHidden(1);
-     ui->Cover_groupBox->setHidden(1);
-     QPixmap pix("/home/pi/HAMES_1_5/qt_file/temp/image/car_light.png");
-     ui -> label_image -> setPixmap(pix);
-
+    if(gLED == 1){
+        gCoverState = CLOSE;
+        gWindowState = CLOSE;
+        g_stop_moving_cover = 0;
+        g_stop_moving_window = 0;
+        gOpenDegree = 0;
+        gLED = 0;
+        QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_0.png");
+        ui -> label_image -> setPixmap(pix);
+    }
+    else{
+        gCoverState = OPEN;
+        gWindowState = CLOSE;
+        g_stop_moving_cover = 0;
+        g_stop_moving_window = 0;
+        gOpenDegree = 0;
+        gLED = 1;
+        QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_light.png");
+        ui -> label_image -> setPixmap(pix);
+    }
 }
 
 
 void MainWindow::on_SelectMode_clicked()
 {
     // set variable
-
+    ui->WindowSlider->setValue(gOpenDegree);
      ui->Cover_groupBox->setVisible(1);
      ui->Select_groupBox->setVisible(1);
      ui ->Select_groupBox->setDisabled(1);
-     QPixmap pix("/home/pi/HAMES_1_5/qt_file/temp/image/car_100.png");
+     QPixmap pix("/home/pi/HAMES_1_5/qt_file/integrated_1029/image/car_100.png");
      ui -> label_image -> setPixmap(pix);
 }
 
@@ -193,11 +234,30 @@ void MainWindow::on_WindowSlider_valueChanged(int value)
 void MainWindow::on_WindowSlider_sliderReleased()
 {
     // set variable
-    gCoverState = OPEN;
-    gWindowState = OPEN;
-    g_stop_moving_cover = 0;
-    g_stop_moving_window = 0;
-    gOpenDegree =ui->WindowSlider->value();
+    int degree = ui->WindowSlider->value();
+
+    if (degree < 5)
+    {
+        gCoverState = CLOSE;
+        gWindowState = CLOSE;
+        g_stop_moving_cover = 0;
+        g_stop_moving_window = 0;
+        gOpenDegree = 0;
+    }
+    else
+    {
+        gCoverState = OPEN;
+        gWindowState = OPEN;
+        g_stop_moving_cover = 0;
+        g_stop_moving_window = 0;
+        gOpenDegree = degree;
+    }
+    gLED = 0;
+//    gCoverState = OPEN;
+//    gWindowState = OPEN;
+//    g_stop_moving_cover = 0;
+//    g_stop_moving_window = 0;
+//    gOpenDegree = degree;
 
 }
 
