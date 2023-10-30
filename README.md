@@ -59,3 +59,12 @@
 4. 왼쪽 하단 실행버튼 클릭 시, build 완료
    
     ![3](https://github.com/JINK004/HAMES_1_5/assets/87352996/4dac774a-428f-4de4-8e34-1c3809a46f31)
+
+- 빌드 시, 주의사항
+    - mainwindow.cpp에 image파일들 경로 수정 후 빌드
+        
+        ```jsx
+        // ../ image 폴더를 다운받은 경로 입력
+        QPixmap pix("../image/car_0.png");
+        ui -> label_image -> setPixmap(pix);
+        ```
