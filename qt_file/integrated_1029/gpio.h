@@ -15,7 +15,8 @@
 // ultrasonic wave sensor
 #define UWAVE_TRIG_PIN 18   // BCM
 #define UWAVE_ECHO_PIN 21   // BCM
-//#define UWAVE_TRIG_PIN 1  // wiringPi
-//#define UWAVE_ECHO_PIN 29 // wiringPi
+
+#define UWAVE_TRIG_PIN_2 23   // BCM
+#define UWAVE_ECHO_PIN_2 24   // BCM
 
 #endif // GPIO_H

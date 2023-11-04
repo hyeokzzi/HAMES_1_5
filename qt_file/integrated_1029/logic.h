@@ -16,12 +16,12 @@
 #include <wiringSerial.h>
 using namespace std;
 
-#define MAX_Q_SIZE 35
-#define DIST_STDEV_TH 1
+#define MAX_Q_SIZE 30
+#define DIST_STDEV_TH 2
 #define RAIN_TH 4000
 
-#define CLOSE_LENGTH 4
-#define OPEN_LENGTH 21
+#define CLOSE_LENGTH 3
+#define OPEN_LENGTH 18
 
 #define UNSET 0
 #define SET 1
