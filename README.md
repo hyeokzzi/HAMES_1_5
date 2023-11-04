@@ -34,7 +34,7 @@
 4. QT 환경 WiringPi 라이브러리 Import
     1. 프로젝트 내 .pro 파일에서 Extern Library추가를 통해 WiringPi 추가
         - usr/lib/libwiringPi.so 경로 추가하면 설정 완료
-      <img src="https://github.com/JINK004/HAMES_1_5/assets/87352996/59ee36f1-862a-4d1b-8921-0d4060656739.png" width="500" height="150"/>
+         <img src="https://github.com/JINK004/HAMES_1_5/assets/87352996/c0d14be8-b845-47a8-b2d2-d0014444ebc8.png" width="500" height="150"/>
 
 
 
@@ -49,16 +49,15 @@
     ```
     
 2. Open Project를 선택
-    ![1](https://github.com/JINK004/HAMES_1_5/assets/87352996/596079f4-9793-4a50-b312-d0ec0e9369fe)
+   ![1](https://github.com/JINK004/HAMES_1_5/assets/87352996/5a05346c-4dca-44ce-b8b3-6be4ba9d7b32)
 
     
-3. 프로젝트 구성 파일 전부 선택 후 Open 클릭
-    ![2](https://github.com/JINK004/HAMES_1_5/assets/87352996/79643711-de7d-4807-a9c2-f184779d3b69)
+3. 프로젝트 구성 파일 전부 선택 후 Open 클
+   ![2](https://github.com/JINK004/HAMES_1_5/assets/87352996/90db76d9-7c56-4b5c-87a0-4e15312aa0d7)
 
     
 4. 왼쪽 하단 실행버튼 클릭 시, build 완료
-   
-    ![3](https://github.com/JINK004/HAMES_1_5/assets/87352996/4dac774a-428f-4de4-8e34-1c3809a46f31)
+   ![3](https://github.com/JINK004/HAMES_1_5/assets/87352996/5d7a8da6-d708-406c-bb1e-934e6e030e90)
 
 - 빌드 시, 주의사항
     - mainwindow.cpp에 image파일들 경로 수정 후 빌드
