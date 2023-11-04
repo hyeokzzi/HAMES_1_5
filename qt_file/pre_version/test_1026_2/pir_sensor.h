@@ -1,6 +1,7 @@
 #ifndef PIR_SENSOR_H
 #define PIR_SENSOR_H
 
+<<<<<<< HEAD:qt_file/pre_version/test_1026_2/pir_sensor.h
 #include <QThread>
 #include <QDebug>
 #include <unistd.h>
@@ -30,4 +31,6 @@ private:
 signals:
     void ThreadEnd(int);
 };
+=======
+>>>>>>> main:qt_file/test_1024/pir_sensor.h
 #endif // PIR_SENSOR_H

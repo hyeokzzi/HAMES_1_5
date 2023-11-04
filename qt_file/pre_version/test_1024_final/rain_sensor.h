@@ -1,6 +1,7 @@
 #ifndef RAIN_SENSOR_H
 #define RAIN_SENSOR_H
 
+<<<<<<< HEAD:qt_file/pre_version/test_1024_final/rain_sensor.h
 #include <QThread>
 #include <QDebug>
 #include <unistd.h>
@@ -25,4 +26,6 @@ signals:
     void ThreadEnd(int);
 };
 
+=======
+>>>>>>> main:qt_file/test_1024/rain_sensor.h
 #endif // RAIN_SENSOR_H
